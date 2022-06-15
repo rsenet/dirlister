@@ -14,10 +14,10 @@ warnings.filterwarnings("ignore", category=UserWarning, module='bs4')
 
 
 def parse_web_page(url, dirlister_ext=None, dirlister_log=None):
-    page  = requests.get(url)
-    soup  = BeautifulSoup(page.text, "lxml")
-
     try:
+        page  = requests.get(url)
+        soup  = BeautifulSoup(page.text, "lxml")
+
         for link in soup.findAll('a'):
             link_name = link.get('href')
             full_url  = "%s%s" % (url, link_name)
@@ -45,6 +45,9 @@ def parse_web_page(url, dirlister_ext=None, dirlister_log=None):
                         parse_web_page(full_url, dirlister_ext, dirlister_log)
 
     except TypeError:
+        pass
+
+    except requests.exceptions.ConnectionError:
         pass
 
     return ALL_LINKS
